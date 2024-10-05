@@ -1,0 +1,22 @@
+<h1>News</h1>
+
+
+<ul>
+  {% for new in news %}
+      <h2>Title: {{ new.title }} </h2>
+      <li>{{ new.content }}</li>
+      <li>Created at {{ new.created_at }}</li>
+  {% empty %}
+      <li>No news available.</li>
+  {% endfor %}
+</ul>
+
+
+
+<h2>Add news</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <button type="submit">Add News</button>
+</form>
