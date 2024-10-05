@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 from news.models import News
 from news.forms import NewsPostForm
 # Create your views here.
@@ -22,5 +22,8 @@ class NewsListView(ListView):
       form.save()
       return redirect('/news')
 
-
-
+class NewsDetailView(DetailView):
+   model = News
+   context_object_name = 'news'
+   template_name = 'news/news_detail.html'
+   
