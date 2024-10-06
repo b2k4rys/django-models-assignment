@@ -1,5 +1,5 @@
 from django import forms 
-from news.models import News
+from news.models import News, Comment
 
 
 class NewsPostForm(forms.ModelForm):
@@ -7,3 +7,7 @@ class NewsPostForm(forms.ModelForm):
     model = News
     fields = ('title', 'content')
     
+class CommentPostForm(forms.ModelForm):
+  class Meta: 
+    model = Comment
+    fields = ('content',)

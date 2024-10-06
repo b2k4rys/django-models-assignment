@@ -5,3 +5,25 @@
     <li>{{ news.content }}</li>
     <li>Created at {{ news.created_at }}</li>
 </ul>
+
+
+<h1>Comments</h1>
+<ul>
+    {% for comment in comments %}
+        <h3>{{ comment.content }} </h3>
+        <li>Created at {{ comment.created_at }}</li>
+        <hr>
+    {% empty %}
+        <li>No comments available.</li>
+    {% endfor %}
+</ul>
+  
+
+
+
+<h2>Add comment</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Add Comment</button>
+</form>

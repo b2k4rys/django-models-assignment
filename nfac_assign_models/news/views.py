@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.views.generic import ListView, DetailView
-from news.models import News
-from news.forms import NewsPostForm
+from news.models import News, Comment
+from news.forms import NewsPostForm, CommentPostForm
+from django.shortcuts import get_object_or_404
 # Create your views here.
 
 class NewsListView(ListView):
@@ -18,12 +19,48 @@ class NewsListView(ListView):
   def post(self, request, *args, **kwargs):
     form  = NewsPostForm(request.POST)
 
+
     if form.is_valid():
-      form.save()
-      return redirect('/news')
+      new_news = form.save()
+      id = new_news.id
+
+      return redirect('news:news_detail', pk=id)
 
 class NewsDetailView(DetailView):
-   model = News
-   context_object_name = 'news'
-   template_name = 'news/news_detail.html'
    
+  model = News
+  context_object_name = 'news'
+  template_name = 'news/news_detail.html'
+  
+
+  def get_context_data(self, **kwargs):
+      pk = self.kwargs.get('pk')
+      news = get_object_or_404(News, pk=pk)
+      comments = Comment.objects.filter(news_comment=news).all()
+      context = super().get_context_data(**kwargs)
+      context['form'] = CommentPostForm()
+      context['comments'] = comments
+      return context
+
+  def post(self, request, pk, *args, **kwargs):
+    
+    form = CommentPostForm(request.POST)
+
+    if form.is_valid():
+        news = get_object_or_404(News, pk=pk)
+        comment = form.save(commit=False)
+        comment.news_comment = news
+        comment.save()
+        id = news.id
+        return redirect('news:news_detail', pk=id)
+    
+
+
+
+
+    
+   
+
+   
+
+
